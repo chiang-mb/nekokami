@@ -1,0 +1,58 @@
+@import "../../../node_modules/bootstrap/scss/functions";
+@import "helpers/variables";
+@import "../../../node_modules/bootstrap/scss/bootstrap";
+@import "./layout/custom";
+
+/* 圖片 hover 放大 */
+.hover-zoom-container {
+  position: relative;
+}
+
+.hover-zoom {
+  transition: transform 0.3s ease;
+}
+
+.hover-zoom:hover {
+  transform: scale(1.05);
+}
+
+/* 針對自訂的 .my-custom-pagination 做客製化 */
+
+/* 1. 分頁項目間距 */
+.my-custom-pagination .page-item {
+  margin: 0 5px; /* 左右各 5px */
+}
+
+/* 2. 預設分頁按鈕外觀 (非 active 狀態) */
+.my-custom-pagination .page-link {
+  color: #000; /* 預設文字色：黑 */
+  border: 1px solid #ddd; /* 預設邊框色 */
+  transition: all 0.2s ease; /* 也可加個小 transition */
+}
+
+/* 3. 滑鼠移入 (hover) 效果 */
+.my-custom-pagination .page-link:hover {
+  color: #000;
+  background-color: #f0f0f0; /* 或任何你想要的 hover 背景 */
+  border-color: #ccc;
+}
+
+/* 4. active 狀態：黑底、白字 */
+.my-custom-pagination .page-item.active .page-link {
+  background-color: #000; /* 黑底 */
+  border-color: #000; /* 邊框也用黑色 */
+  color: #fff; /* 白字 */
+}
+
+/* 5. disabled 狀態 (無上一頁 / 無下一頁) */
+.my-custom-pagination .page-item.disabled .page-link {
+  color: #aaa;
+  pointer-events: none; /* 不可點擊 */
+  background-color: #fff;
+  border-color: #ddd;
+  opacity: 0.5; /* 或其他想要的外觀 */
+}
+
+.swiper-container {
+  overflow: hidden;
+}
