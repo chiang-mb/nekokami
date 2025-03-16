@@ -58,13 +58,15 @@
 }
 
 .cat-img {
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
+  margin: 0 0.5rem;
 }
 
 @media (min-width: 768px) {
   .cat-img {
     width: 180px;
     height: 180px;
+    margin: 0 1rem;
   }
 }

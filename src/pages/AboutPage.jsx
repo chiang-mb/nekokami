@@ -11,7 +11,7 @@ export default function AboutPage() {
 
       {/* 貓社長們 */}
       <h5 className="mb-4">貓社長們</h5>
-      <div className="d-flex justify-content-center align-items-center flex-wrap mb-4">
+      <div className="d-flex justify-content-center align-items-center flex-nowrap mb-4">
         {[1, 2, 3].map((num) => (
           <div
             key={num}
@@ -19,7 +19,6 @@ export default function AboutPage() {
             style={{
               borderRadius: "50%",
               overflow: "hidden",
-              margin: "0 0.8rem",
             }}
           >
             <img
