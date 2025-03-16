@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ReactLoading from "react-loading";
 import { useDispatch } from "react-redux";
-import { updateCartData } from "../redux/cartSlice";
 import { useNavigate } from "react-router-dom";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -31,20 +30,6 @@ export default function HomePage() {
     };
     getAllProducts();
   }, []);
-
-  // 加入購物車 (若未使用可自行刪除)
-  const addCartItem = async (product_id, qty) => {
-    try {
-      await axios.post(`${BASE_URL}/v2/api/${API_PATH}/cart`, {
-        data: { product_id, qty: Number(qty) },
-      });
-      const cartRes = await axios.get(`${BASE_URL}/v2/api/${API_PATH}/cart`);
-      dispatch(updateCartData(cartRes.data.data));
-      alert("已成功加入購物車！");
-    } catch (error) {
-      alert("加入購物車失敗");
-    }
-  };
 
   // 導向 /products?category=xxx
   const goToCategory = (category) => {
@@ -141,8 +126,7 @@ export default function HomePage() {
                   >
                     <h3 className="mb-3">{"包裝紙"}</h3>
                     <p className="text-muted text-center mb-4">
-                      {packagingPaper.description ||
-                        "嚴選高品質紙材，適用於禮品包裝、手工藝品及文創商品。細緻印刷與高耐久性設計，包裝不僅美觀，更具收藏價值。"}
+                      {packagingPaper.description || ""}
                     </p>
                     <button
                       className="btn btn-dark"
@@ -179,8 +163,7 @@ export default function HomePage() {
                   >
                     <h3 className="mb-3">{"明信片"}</h3>
                     <p className="text-muted text-center mb-4">
-                      {postcard.description ||
-                        "厚磅紙張結合創意設計，讓明信片不僅是一張紙，而是溫暖情感的傳遞。適合作為禮物、收藏或書寫心意的載體。"}
+                      {postcard.description || ""}
                     </p>
                     <button
                       className="btn btn-dark"
@@ -217,8 +200,7 @@ export default function HomePage() {
                   >
                     <h3 className="mb-3">{"海報"}</h3>
                     <p className="text-muted text-center mb-4">
-                      {poster.description ||
-                        "獨特設計，將貓的靈動與魅力化為藝術，讓你的空間充滿療癒感與個性。無論是掛在牆上，還是點綴角落，貓都會以最柔軟的方式，成為你的日常風景。"}
+                      {poster.description || ""}
                     </p>
                     <button
                       className="btn btn-dark"
@@ -240,7 +222,7 @@ export default function HomePage() {
         <div className="row">
           <div className="col-md-4 mb-3 text-center">
             <img
-              src="https://images.unsplash.com/photo-1422036306541-00138cae4dbc?q=80&w=1931&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              src="https://images.unsplash.com/photo-1422036306541-00138cae4dbc?w=500&h=300&fit=crop"
               alt="嚴選日製紙材"
               className="img-fluid rounded mb-3"
               style={{ height: "250px", objectFit: "cover" }}
@@ -253,7 +235,7 @@ export default function HomePage() {
           </div>
           <div className="col-md-4 mb-3 text-center">
             <img
-              src="https://images.unsplash.com/photo-1462143338528-eca9936a4d09?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              src="https://images.unsplash.com/photo-1462143338528-eca9936a4d09?w=500&h=300&fit=crop"
               alt="FSC 認證紙張"
               className="img-fluid rounded mb-3"
               style={{ height: "250px", objectFit: "cover" }}
@@ -266,7 +248,7 @@ export default function HomePage() {
           </div>
           <div className="col-md-4 mb-3 text-center">
             <img
-              src="https://images.unsplash.com/photo-1625820104062-387167dd655b?q=80&w=1825&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              src="https://images.unsplash.com/photo-1625820104062-387167dd655b?w=500&h=300&fit=crop"
               alt="高品質印刷技術"
               className="img-fluid rounded mb-3"
               style={{ height: "250px", objectFit: "cover" }}
@@ -377,35 +359,12 @@ export default function HomePage() {
                     }}
                   />
                 </div>
-                <div
-                  style={{
-                    width: "100px",
-                    height: "100px",
-                    borderRadius: "50%",
-                    overflow: "hidden",
-                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                    cursor: "pointer",
-                  }}
-                  className="hover-zoom-container"
-                  onClick={() => navigate("/donation")}
-                >
-                  <img
-                    src="/nekokami/images/cat4.jpg"
-                    alt="cat4"
-                    className="hover-zoom"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
-                  />
-                </div>
               </div>
               <p
                 className="text-muted text-lg-end text-center"
                 style={{ fontSize: "1.2rem" }}
               >
-                邀請您一起為貓做更多，將回饋可愛感謝禮{" "}
+                奉納香油錢給貓貓，將得到感謝回饋禮{" "}
                 <span style={{ color: "red", fontSize: "1.5rem" }}>❤</span>
               </p>
               <button

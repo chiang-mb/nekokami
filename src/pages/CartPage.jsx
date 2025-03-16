@@ -144,16 +144,23 @@ export default function CartPage() {
 
   // 更新購物車某項商品的數量
   const updateCartItem = async (cartItem_id, product_id, qty) => {
-    setIsScreenLoading(true);
+    if (qty <= 0) {
+      // 如果數量 <= 0，則從購物車移除該商品
+      removeCartItem(cartItem_id);
+      return;
+    }
+
     try {
       await axios.put(`${BASE_URL}/v2/api/${API_PATH}/cart/${cartItem_id}`, {
-        data: { product_id, qty: Number(qty) },
+        data: {
+          product_id,
+          qty: Math.max(1, qty), // 確保數量不會低於 1
+        },
       });
-      getCart();
+
+      getCart(); // 更新購物車
     } catch (error) {
       alert("更新購物車品項失敗");
-    } finally {
-      setIsScreenLoading(false);
     }
   };
 
@@ -211,6 +218,7 @@ export default function CartPage() {
                             }
                             className="btn btn-outline-dark border-0 py-2"
                             type="button"
+                            disabled={cartItem.qty <= 1}
                             id="button-addon1"
                           >
                             <i className="fas fa-minus"></i>

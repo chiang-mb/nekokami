@@ -12,15 +12,14 @@ export default function AboutPage() {
       {/* 貓社長們 */}
       <h5 className="mb-4">貓社長們</h5>
       <div className="d-flex justify-content-center align-items-center flex-wrap mb-4">
-        {[1, 2, 3, 4].map((num) => (
+        {[1, 2, 3].map((num) => (
           <div
             key={num}
+            className="cat-img"
             style={{
-              width: "110px",
-              height: "110px",
               borderRadius: "50%",
               overflow: "hidden",
-              margin: "0 0.5rem",
+              margin: "0 0.8rem",
             }}
           >
             <img
