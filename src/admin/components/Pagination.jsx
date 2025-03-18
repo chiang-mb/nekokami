@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 function Pagination({ pageInfo, handlePageChange }) {
   const handleClick = (e, page) => {
     e.preventDefault();
@@ -52,5 +54,15 @@ function Pagination({ pageInfo, handlePageChange }) {
     </div>
   );
 }
+
+Pagination.propTypes = {
+  pageInfo: PropTypes.shape({
+    has_pre: PropTypes.bool.isRequired,
+    current_page: PropTypes.number.isRequired,
+    total_pages: PropTypes.number.isRequired,
+    has_next: PropTypes.bool.isRequired,
+  }).isRequired,
+  handlePageChange: PropTypes.func.isRequired,
+};
 
 export default Pagination;

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import axios from "axios";
 import ReactLoading from "react-loading";
 import { Link } from "react-router-dom";
@@ -17,44 +17,23 @@ export default function CartPage() {
   const [productsList, setProductsList] = useState([]);
   const [isScreenLoading, setIsScreenLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  const swiperRef = useRef(null);
   const recommendedSwiperRef = useRef(null);
-
   const dispatch = useDispatch();
 
   // 取得購物車
-  const getCart = async () => {
+  const getCart = useCallback(async () => {
     try {
       const res = await axios.get(`${BASE_URL}/v2/api/${API_PATH}/cart`);
       setCart(res.data.data);
       dispatch(updateCartData(res.data.data));
-    } catch (error) {
+    } catch {
       alert("取得購物車列表失敗");
     }
-  };
+  }, [dispatch]);
 
   useEffect(() => {
     getCart();
-
-    // 初始化原有的 Swiper（如果有其他滑動效果）
-    new Swiper(swiperRef.current, {
-      modules: [Autoplay],
-      loop: true,
-      autoplay: {
-        delay: 5000,
-        disableOnInteraction: false,
-      },
-      slidesPerView: 3,
-      spaceBetween: 10,
-      breakpoints: {
-        767: {
-          slidesPerView: 3,
-          spaceBetween: 30,
-        },
-      },
-    });
-  }, []);
+  }, [getCart]);
 
   // 取得所有產品（用於推薦）
   useEffect(() => {
@@ -63,7 +42,6 @@ export default function CartPage() {
         const res = await axios.get(
           `${BASE_URL}/v2/api/${API_PATH}/products/all`
         );
-        // 假設後端回傳的是物件，所以轉為陣列
         setProductsList(Object.values(res.data.products));
       } catch (error) {
         console.error("取得產品失敗", error);
@@ -73,9 +51,10 @@ export default function CartPage() {
   }, []);
 
   // 推薦產品：排除已在購物車中的品項
-  const recommendedProducts = productsList.filter((product) => {
-    return !cart.carts?.some((cartItem) => cartItem.product.id === product.id);
-  });
+  const recommendedProducts = productsList.filter(
+    (product) =>
+      !cart.carts?.some((cartItem) => cartItem.product.id === product.id)
+  );
 
   // 初始化推薦產品的 Swiper
   useEffect(() => {
@@ -84,7 +63,7 @@ export default function CartPage() {
         modules: [Autoplay],
         loop: true,
         autoplay: {
-          delay: 2500,
+          delay: 3500,
           disableOnInteraction: false,
         },
         slidesPerView: 2,
@@ -107,23 +86,10 @@ export default function CartPage() {
         data: { product_id, qty: Number(qty) },
       });
       getCart(); // 更新購物車
-    } catch (error) {
+    } catch {
       alert("加入購物車失敗");
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  // 清空整個購物車
-  const removeCart = async () => {
-    setIsScreenLoading(true);
-    try {
-      await axios.delete(`${BASE_URL}/v2/api/${API_PATH}/carts`);
-      getCart();
-    } catch (error) {
-      alert("刪除購物車失敗");
-    } finally {
-      setIsScreenLoading(false);
     }
   };
 
@@ -132,10 +98,8 @@ export default function CartPage() {
     setIsScreenLoading(true);
     try {
       await axios.delete(`${BASE_URL}/v2/api/${API_PATH}/cart/${cartItem_id}`);
-      const res = await axios.get(`${BASE_URL}/v2/api/${API_PATH}/cart`);
-      dispatch(updateCartData(res.data.data));
-      setCart(res.data.data);
-    } catch (error) {
+      getCart();
+    } catch {
       alert("刪除購物車品項失敗");
     } finally {
       setIsScreenLoading(false);
@@ -145,21 +109,15 @@ export default function CartPage() {
   // 更新購物車某項商品的數量
   const updateCartItem = async (cartItem_id, product_id, qty) => {
     if (qty <= 0) {
-      // 如果數量 <= 0，則從購物車移除該商品
       removeCartItem(cartItem_id);
       return;
     }
-
     try {
       await axios.put(`${BASE_URL}/v2/api/${API_PATH}/cart/${cartItem_id}`, {
-        data: {
-          product_id,
-          qty: Math.max(1, qty), // 確保數量不會低於 1
-        },
+        data: { product_id, qty: Math.max(1, qty) },
       });
-
-      getCart(); // 更新購物車
-    } catch (error) {
+      getCart();
+    } catch {
       alert("更新購物車品項失敗");
     }
   };
@@ -318,6 +276,7 @@ export default function CartPage() {
                         <button
                           className="btn btn-dark"
                           onClick={() => addCartItem(product.id, 1)}
+                          disabled={isLoading}
                         >
                           加入購物車
                         </button>
@@ -332,6 +291,20 @@ export default function CartPage() {
       </div>
 
       {isScreenLoading && (
+        <div
+          className="d-flex justify-content-center align-items-center"
+          style={{
+            position: "fixed",
+            inset: 0,
+            backgroundColor: "rgba(255,255,255,0.3)",
+            zIndex: 999,
+          }}
+        >
+          <ReactLoading type="spin" color="black" width="4rem" height="4rem" />
+        </div>
+      )}
+
+      {isLoading && (
         <div
           className="d-flex justify-content-center align-items-center"
           style={{

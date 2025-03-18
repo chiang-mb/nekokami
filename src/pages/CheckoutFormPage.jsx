@@ -62,10 +62,9 @@ export default function CheckoutFormPage() {
 
       await axios.post(`${BASE_URL}/v2/api/${API_PATH}/order`, orderData);
 
-      // ✅ **不要清空 Redux 購物車，直接跳轉到付款頁面**
       reset(); // 清空表單
       navigate("/checkout-payment");
-    } catch (error) {
+    } catch {
       alert("結帳失敗，請稍後再試！");
     } finally {
       setIsSubmitting(false);

@@ -7,9 +7,7 @@ const TOAST_DURATION = 2000;
 
 export default function Toast() {
   const messages = useSelector((state) => state.toast.messages);
-
   const toastRefs = useRef({});
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -18,15 +16,14 @@ export default function Toast() {
 
       if (messageElement) {
         const toastInstance = new BsToast(messageElement);
-
         toastInstance.show();
-        dispatch;
+
         setTimeout(() => {
           dispatch(removeMessage(message.id));
         }, TOAST_DURATION);
       }
     });
-  }, [messages]);
+  }, [messages, dispatch]);
 
   const handleDismiss = (message_id) => {
     dispatch(removeMessage(message_id));
@@ -52,7 +49,7 @@ export default function Toast() {
               {message.status === "success" ? "成功" : "失敗"}
             </strong>
             <button
-              onClick={() => handleDismiss(message_id)}
+              onClick={() => handleDismiss(message.id)}
               type="button"
               className="btn-close"
               aria-label="Close"

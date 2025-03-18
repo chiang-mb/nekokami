@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { updateCartData } from "../../redux/cartSlice";
@@ -18,28 +18,50 @@ export default function Header() {
   const dispatch = useDispatch();
   const carts = useSelector((state) => state.cart.carts) || [];
 
+  // 用這個 ref 來量測整個 nav 的高度
+  const headerRef = useRef(null);
+
   // 取得購物車
-  const getCart = async () => {
+  const getCart = useCallback(async () => {
     try {
       const res = await axios.get(`${BASE_URL}/v2/api/${API_PATH}/cart`);
       dispatch(updateCartData(res.data.data));
     } catch (error) {
-      console.error("取得購物車列表失敗", error);
+      console.error("獲得購物車列表失敗", error);
     }
-  };
+  }, [dispatch]);
 
   useEffect(() => {
     getCart();
+  }, [getCart]);
+
+  // 根據 Header 高度，動態調整 body 的 padding-top
+  useEffect(() => {
+    const updateBodyPadding = () => {
+      if (headerRef.current) {
+        document.body.style.paddingTop = `${headerRef.current.offsetHeight}px`;
+      }
+    };
+
+    updateBodyPadding(); // 初始設定
+    window.addEventListener("resize", updateBodyPadding);
+    return () => {
+      window.removeEventListener("resize", updateBodyPadding);
+    };
   }, []);
 
   return (
-    <div className="container d-flex flex-column">
-      <nav className="navbar navbar-expand-lg navbar-light d-flex justify-content-between align-items-center">
+    <nav
+      ref={headerRef}
+      className="navbar navbar-expand-lg navbar-light bg-light fixed-top"
+    >
+      {/* 這裡才是 container，限制整個 Header 的寬度 */}
+      <div className="container d-flex justify-content-between align-items-center">
         <NavLink className="navbar-brand fw-bold" to="/">
           NEKOKAMI
         </NavLink>
 
-        {/* 手機版獨立購物車 */}
+        {/* 手機版購物車 + 漢堡選單 */}
         <div className="d-flex align-items-center d-lg-none">
           <NavLink
             to="/cart"
@@ -62,7 +84,6 @@ export default function Header() {
             )}
           </NavLink>
 
-          {/* 漢堡選單按鈕 */}
           <button
             className="navbar-toggler"
             type="button"
@@ -72,7 +93,6 @@ export default function Header() {
           </button>
         </div>
 
-        {/* 桌機版與手機版共用選單 */}
         <div
           className={`collapse navbar-collapse justify-content-end ${
             isMenuOpen ? "show" : ""
@@ -111,7 +131,7 @@ export default function Header() {
             </NavLink>
           </div>
         </div>
-      </nav>
-    </div>
+      </div>
+    </nav>
   );
 }

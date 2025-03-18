@@ -23,7 +23,7 @@ export default function DonationPage() {
           (product) => product.category === "奉納金"
         );
         setDonationProducts(filteredProducts);
-      } catch (error) {
+      } catch {
         alert("取得奉納金產品失敗");
       } finally {
         setIsLoading(false);
@@ -44,7 +44,7 @@ export default function DonationPage() {
       dispatch(updateCartData(cartRes.data.data)); // 更新 Redux 內的購物車狀態
 
       // alert("已添加奉納金至購物車！");
-    } catch (error) {
+    } catch {
       alert("加入購物車失敗");
     }
   };

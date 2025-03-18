@@ -27,7 +27,7 @@ export default function ProductsPage() {
           (product) => product.category !== "奉納金"
         );
         setAllProducts(filteredProducts);
-      } catch (error) {
+      } catch {
         alert("取得產品失敗");
       } finally {
         setIsLoading(false);
@@ -53,7 +53,7 @@ export default function ProductsPage() {
       const cartRes = await axios.get(`${BASE_URL}/v2/api/${API_PATH}/cart`);
       dispatch(updateCartData(cartRes.data.data));
       // alert("已成功加入購物車！");
-    } catch (error) {
+    } catch {
       alert("加入購物車失敗");
     }
   };

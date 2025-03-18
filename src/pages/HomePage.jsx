@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import ReactLoading from "react-loading";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -11,7 +10,6 @@ export default function HomePage() {
   const [allProducts, setAllProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,7 +20,7 @@ export default function HomePage() {
           `${BASE_URL}/v2/api/${API_PATH}/products/all`
         );
         setAllProducts(Object.values(res.data.products));
-      } catch (error) {
+      } catch {
         alert("取得產品失敗");
       } finally {
         setIsLoading(false);

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useRef } from "react";
 import { Modal } from "bootstrap";
+import PropTypes from "prop-types";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
@@ -18,17 +19,14 @@ function DelProductModal({ tempProduct, isOpen, setIsOpen, getProducts }) {
   useEffect(() => {
     if (isOpen) {
       const modalInstance = Modal.getInstance(delProductModalRef.current);
-
-      modalInstance.show();
+      modalInstance?.show(); // ✅ 避免 modalInstance 為 null
     }
   }, [isOpen]);
 
   // 關閉刪除產品 Modal
   const handleCloseDelProductModal = () => {
     const modalInstance = Modal.getInstance(delProductModalRef.current);
-
-    modalInstance.hide();
-
+    modalInstance?.hide(); // ✅ 避免 modalInstance 為 null
     setIsOpen(false);
   };
 
@@ -46,23 +44,22 @@ function DelProductModal({ tempProduct, isOpen, setIsOpen, getProducts }) {
           },
         }
       );
-    } catch (error) {
+    } catch {
       alert("刪除產品失敗");
     }
   };
 
   // 刪除產品並更新列表
-  const handleDeleteProdct = async () => {
+  const handleDeleteProduct = async () => {
     try {
       await deleteProduct(); // 執行刪除請求
-
       getProducts();
-
       handleCloseDelProductModal(); // 關閉刪除確認 Modal
-    } catch (error) {
+    } catch {
       alert("刪除產品失敗");
     }
   };
+
   return (
     <div
       ref={delProductModalRef}
@@ -85,7 +82,7 @@ function DelProductModal({ tempProduct, isOpen, setIsOpen, getProducts }) {
           </div>
           <div className="modal-body">
             你是否要刪除
-            <span className="text-danger fw-bold">{tempProduct.title}</span>
+            <span className="text-danger fw-bold">{tempProduct?.title}</span>
           </div>
           <div className="modal-footer">
             <button
@@ -96,7 +93,7 @@ function DelProductModal({ tempProduct, isOpen, setIsOpen, getProducts }) {
               取消
             </button>
             <button
-              onClick={handleDeleteProdct}
+              onClick={handleDeleteProduct}
               type="button"
               className="btn btn-danger"
             >
@@ -108,5 +105,18 @@ function DelProductModal({ tempProduct, isOpen, setIsOpen, getProducts }) {
     </div>
   );
 }
+
+DelProductModal.propTypes = {
+  tempProduct: PropTypes.shape({
+    id: PropTypes.number,
+    origin_price: PropTypes.number,
+    price: PropTypes.number,
+    is_enabled: PropTypes.bool,
+    title: PropTypes.string,
+  }).isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  setIsOpen: PropTypes.func.isRequired,
+  getProducts: PropTypes.func.isRequired,
+};
 
 export default DelProductModal;

@@ -45,7 +45,7 @@ export default function AdminProductPage() {
       );
       setProducts(res.data.products);
       setPageInfo(res.data.pagination);
-    } catch (error) {
+    } catch {
       alert("取得產品失敗");
     }
   };

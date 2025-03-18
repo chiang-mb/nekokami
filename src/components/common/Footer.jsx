@@ -29,7 +29,7 @@ export default function Footer() {
           </div>
 
           <div className="d-flex justify-content-between align-items-center flex-wrap">
-            <p className="mb-0 text-white">
+            <p className="mb-0 footer-text text-white">
               © 2025 NEKOKAMI All Rights Reserved
               <br />
               本網站僅供個人練習使用，無商業行為

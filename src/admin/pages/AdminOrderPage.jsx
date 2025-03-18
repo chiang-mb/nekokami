@@ -29,7 +29,7 @@ export default function AdminOrderPage() {
       );
       setOrders(res.data.orders);
       setPageInfo(res.data.pagination);
-    } catch (error) {
+    } catch {
       alert("取得訂單失敗");
     }
   };
@@ -47,7 +47,7 @@ export default function AdminOrderPage() {
       );
       alert("訂單刪除成功！");
       getOrders();
-    } catch (error) {
+    } catch {
       alert("刪除訂單失敗");
     }
   };
@@ -67,13 +67,13 @@ export default function AdminOrderPage() {
         },
       };
 
-      const res = await axios.put(
+      await axios.put(
         `${BASE_URL}/v2/api/${API_PATH}/admin/order/${orderId}`,
         updatedData
       );
 
       getOrders();
-    } catch (error) {
+    } catch {
       alert("更新訂單狀態失敗");
     }
   };

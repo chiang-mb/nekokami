@@ -70,3 +70,15 @@
     margin: 0 1rem;
   }
 }
+
+/* 桌機版字體 */
+.footer-text {
+  font-size: 14px;
+}
+
+/* 手機版字體 */
+@media (max-width: 768px) {
+  .footer-text {
+    font-size: 10px; /* 手機版字體變小 */
+  }
+}

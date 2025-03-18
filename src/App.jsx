@@ -23,7 +23,7 @@ function App() {
     try {
       const res = await axios.get(`${BASE_URL}/v2/api/${API_PATH}/cart`);
       setCart(res.data.data);
-    } catch (error) {
+    } catch {
       alert("取得購物車列表失敗");
     }
   };
@@ -35,7 +35,7 @@ function App() {
       try {
         const res = await axios.get(`${BASE_URL}/v2/api/${API_PATH}/products`);
         setProducts(res.data.products); // 更新產品列表
-      } catch (error) {
+      } catch {
         alert("取得產品失敗");
       } finally {
         setIsScreenLoading(false); // 關閉 loading
@@ -82,7 +82,7 @@ function App() {
       });
 
       getCart(); // 更新購物車
-    } catch (error) {
+    } catch {
       alert("加入購物車失敗");
     } finally {
       setIsLoading(false);
@@ -96,7 +96,7 @@ function App() {
       await axios.delete(`${BASE_URL}/v2/api/${API_PATH}/carts`);
 
       getCart();
-    } catch (error) {
+    } catch {
       alert("刪除購物車失敗");
     } finally {
       setIsScreenLoading(false);
@@ -110,7 +110,7 @@ function App() {
       await axios.delete(`${BASE_URL}/v2/api/${API_PATH}/cart/${cartItem_id}`);
 
       getCart();
-    } catch (error) {
+    } catch {
       alert("刪除購物車品項失敗");
     } finally {
       setIsScreenLoading(false);
@@ -129,7 +129,7 @@ function App() {
       });
 
       getCart();
-    } catch (error) {
+    } catch {
       alert("更新購物車品項失敗");
     } finally {
       setIsScreenLoading(false);
@@ -168,7 +168,7 @@ function App() {
       await axios.post(`${BASE_URL}/v2/api/${API_PATH}/order`, data);
       reset(); // 清空表單資料
       getCart(); // 重新取得購物車
-    } catch (error) {
+    } catch {
       alert("結帳失敗");
     } finally {
       setIsScreenLoading(false);

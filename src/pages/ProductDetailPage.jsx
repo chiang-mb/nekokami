@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -15,19 +15,18 @@ export default function ProductDetailPage() {
   const dispatch = useDispatch();
 
   // 取得購物車，確保 Redux cart 數據最新
-  const getCart = async () => {
+  const getCart = useCallback(async () => {
     try {
       const res = await axios.get(`${BASE_URL}/v2/api/${API_PATH}/cart`);
       dispatch(updateCartData(res.data.data));
-    } catch (error) {
+    } catch {
       alert("取得購物車列表失敗");
     }
-  };
+  }, [dispatch]);
 
-  // 頁面載入時先取得購物車
   useEffect(() => {
     getCart();
-  }, []);
+  }, [getCart]);
 
   // 取得單一產品資料
   useEffect(() => {
@@ -37,7 +36,7 @@ export default function ProductDetailPage() {
           `${BASE_URL}/v2/api/${API_PATH}/product/${product_id}`
         );
         setProduct(res.data.product);
-      } catch (error) {
+      } catch {
         alert("取得產品失敗");
       }
     };
@@ -55,7 +54,7 @@ export default function ProductDetailPage() {
       });
       getCart(); // 更新購物車
       // alert("加入購物車成功");
-    } catch (error) {
+    } catch {
       alert("加入購物車失敗");
     }
   };

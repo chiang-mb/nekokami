@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { Modal } from "bootstrap";
 import { useDispatch } from "react-redux";
 import { pushMessage } from "../../redux/toastSlice";
+import PropTypes from "prop-types";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
@@ -117,7 +118,7 @@ function ProductModal({
           is_enabled: modalData.is_enabled ? 1 : 0, // 將布林值轉換為 0 或 1
         },
       });
-    } catch (error) {
+    } catch {
       // throw error;
       dispatch(
         pushMessage({
@@ -148,7 +149,7 @@ function ProductModal({
           status: "success",
         })
       );
-    } catch (error) {
+    } catch {
       alert("編輯產品失敗");
     }
   };
@@ -187,7 +188,9 @@ function ProductModal({
         ...modalData,
         imageUrl: uploadedImageUrl,
       });
-    } catch (eroor) {}
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
   };
 
   return (
@@ -448,5 +451,13 @@ function ProductModal({
     </div>
   );
 }
+
+ProductModal.propTypes = {
+  modalMode: PropTypes.string.isRequired,
+  tempProduct: PropTypes.object.isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  setIsOpen: PropTypes.func.isRequired,
+  getProducts: PropTypes.func.isRequired,
+};
 
 export default ProductModal;
