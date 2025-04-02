@@ -6,9 +6,9 @@ export default function Footer() {
       <div className="bg-dark py-5">
         <div className="container">
           <div className="d-flex align-items-center justify-content-between text-white mb-md-7 mb-4">
-            <a className="text-white h4" href="/">
+            <Link to="/" className="text-white h4 text-decoration-none">
               NEKOKAMI
-            </a>
+            </Link>
             <ul className="d-flex list-unstyled mb-0 h4">
               <li>
                 <a href="#" className="text-white mx-3">

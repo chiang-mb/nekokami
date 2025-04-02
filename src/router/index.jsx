@@ -13,9 +13,9 @@ import DonationPage from "../pages/DonationPage";
 
 // 後台
 import AdminLayout from "../layouts/AdminLayout";
-import LoginPage from "../admin/pages/LoginPage";
-import AdminProductPage from "../admin/pages/AdminProductPage";
-import AdminOrderPage from "../admin/pages/AdminOrderPage";
+import LoginPage from "../pages/LoginPage";
+import AdminProductPage from "../pages/AdminProductPage";
+import AdminOrderPage from "../pages/AdminOrderPage";
 
 const router = createHashRouter([
   // 前台路由

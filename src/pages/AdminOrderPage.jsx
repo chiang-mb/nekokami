@@ -1,8 +1,11 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { pushMessage } from "../redux/toastSlice";
 import Toast from "../components/Toast";
-import Pagination from "../components/Pagination"; // 加入 Pagination 元件
+import Pagination from "../components/Pagination";
+import AdminSidebar from "../components/AdminSidebar";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
@@ -10,7 +13,8 @@ const API_PATH = import.meta.env.VITE_API_PATH;
 export default function AdminOrderPage() {
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
-  const [pageInfo, setPageInfo] = useState({}); // 分頁資訊
+  const [pageInfo, setPageInfo] = useState({});
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const isAuth = localStorage.getItem("isAuth");
@@ -23,6 +27,8 @@ export default function AdminOrderPage() {
 
   // 取得訂單資料（支援分頁）
   const getOrders = async (page = 1) => {
+    if (!axios.defaults.headers.common["Authorization"]) return;
+
     try {
       const res = await axios.get(
         `${BASE_URL}/v2/api/${API_PATH}/admin/orders?page=${page}`
@@ -41,17 +47,20 @@ export default function AdminOrderPage() {
 
   // 刪除單筆訂單
   const deleteOrder = async (orderId) => {
+    const isConfirmed = window.confirm("確定要刪除這筆訂單嗎？");
+
+    if (!isConfirmed) return;
+
     try {
       await axios.delete(
         `${BASE_URL}/v2/api/${API_PATH}/admin/order/${orderId}`
       );
-      alert("訂單刪除成功！");
+      dispatch(pushMessage({ text: "刪除訂單成功！", status: "success" }));
       getOrders();
     } catch {
       alert("刪除訂單失敗");
     }
   };
-
   // 切換訂單狀態（paid）
   const updateOrderStatus = async (orderId, currentPaid) => {
     try {
@@ -84,46 +93,9 @@ export default function AdminOrderPage() {
     return time.toLocaleString("zh-TW", { hour12: false });
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("isAuth");
-    navigate("/admin/login");
-  };
-
   return (
     <div className="d-flex">
-      {/* 左側側邊選單 */}
-      <nav
-        className="bg-dark text-white p-4"
-        style={{ minWidth: "200px", minHeight: "100vh" }}
-      >
-        <h2 className="h5 mb-4">管理後台</h2>
-        <ul className="list-unstyled">
-          <li className="mb-3">
-            <Link
-              to="/admin/products"
-              className="text-white text-decoration-none"
-            >
-              產品管理
-            </Link>
-          </li>
-          <li className="mb-3">
-            <Link
-              to="/admin/orders"
-              className="text-white text-decoration-none"
-            >
-              訂單管理
-            </Link>
-          </li>
-          <li>
-            <button
-              onClick={handleLogout}
-              className="btn btn-outline-light w-100"
-            >
-              登出
-            </button>
-          </li>
-        </ul>
-      </nav>
+      <AdminSidebar />
 
       {/* 右側內容 */}
       <div className="container-fluid p-4">

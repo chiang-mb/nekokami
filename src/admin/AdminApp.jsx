@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import LoginPage from "./pages/LoginPage";
+import LoginPage from "../pages/LoginPage";
 
 export default function AdminApp() {
   const [isAuth, setIsAuth] = useState(false);

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Toast as BsToast } from "bootstrap";
-import { removeMessage } from "../../redux/toastSlice";
+import { removeMessage } from "../redux/toastSlice";
 
 const TOAST_DURATION = 2000;
 

@@ -27,8 +27,8 @@ export default function CheckoutPaymentPage() {
         try {
           const res = await axios.get(`${BASE_URL}/v2/api/${API_PATH}/cart`);
           dispatch(updateCartData(res.data.data));
-        } catch (error) {
-          console.error("無法獲取購物車資料", error);
+        } catch {
+          alert("無法獲取購物車資料");
         }
       };
       fetchCart();

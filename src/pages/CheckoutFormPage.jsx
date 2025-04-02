@@ -28,8 +28,8 @@ export default function CheckoutFormPage() {
       try {
         const res = await axios.get(`${BASE_URL}/v2/api/${API_PATH}/cart`);
         dispatch(updateCartData(res.data.data)); // 更新 Redux 購物車狀態
-      } catch (error) {
-        console.error("購物車載入失敗", error);
+      } catch {
+        alert("購物車載入失敗");
       }
     };
 
@@ -172,7 +172,7 @@ export default function CheckoutFormPage() {
             <div className="mb-3">
               <label className="text-muted mb-0">手機號碼</label>
               <input
-                type="text"
+                type="tel"
                 className="form-control"
                 {...register("phone", {
                   required: "手機號碼為必填",

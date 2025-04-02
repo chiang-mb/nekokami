@@ -26,8 +26,8 @@ export default function Header() {
     try {
       const res = await axios.get(`${BASE_URL}/v2/api/${API_PATH}/cart`);
       dispatch(updateCartData(res.data.data));
-    } catch (error) {
-      console.error("獲得購物車列表失敗", error);
+    } catch {
+      alert("取得購物車列表失敗");
     }
   }, [dispatch]);
 

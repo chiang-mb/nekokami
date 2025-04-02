@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { Modal } from "bootstrap";
 import { useDispatch } from "react-redux";
-import { pushMessage } from "../../redux/toastSlice";
+import { pushMessage } from "../redux/toastSlice";
 import PropTypes from "prop-types";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -118,14 +118,9 @@ function ProductModal({
           is_enabled: modalData.is_enabled ? 1 : 0, // 將布林值轉換為 0 或 1
         },
       });
-    } catch {
-      // throw error;
-      dispatch(
-        pushMessage({
-          text: "新增產品失敗",
-          status: "failed",
-        })
-      );
+    } catch (error) {
+      alert(error?.response?.data?.message || "新增產品失敗");
+      throw error;
     }
   };
 
@@ -159,14 +154,25 @@ function ProductModal({
     const apiCall = modalMode === "create" ? createProduct : updateProduct; // 判斷使用的 API
 
     try {
-      await apiCall(); // 執行 API 請求
+      await apiCall(); // 成功執行
 
-      getProducts();
+      dispatch(
+        pushMessage({
+          text: modalMode === "create" ? "新增產品成功" : "編輯產品成功",
+          status: "success",
+        })
+      );
 
-      handleCloseProductModal(); // 關閉 Modal
+      getProducts(); // 更新資料
+      handleCloseProductModal(); // 成功才關 Modal
     } catch (error) {
-      console.error(error);
-      alert(error.response?.data?.message || "更新產品失敗");
+      dispatch(
+        pushMessage({
+          text:
+            error?.response?.data?.message || "操作失敗，請確認欄位是否正確",
+          status: "failed",
+        })
+      );
     }
   };
 
@@ -188,8 +194,8 @@ function ProductModal({
         ...modalData,
         imageUrl: uploadedImageUrl,
       });
-    } catch (error) {
-      console.error("Error uploading image:", error);
+    } catch {
+      alert("圖片上傳失敗");
     }
   };
 

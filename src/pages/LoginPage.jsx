@@ -37,8 +37,7 @@ export default function LoginPage() {
 
       // 轉向管理頁面
       navigate("/admin");
-    } catch (error) {
-      console.error("登入失敗：", error.response?.data || error);
+    } catch {
       alert("登入失敗，請檢查帳號密碼");
     }
   };

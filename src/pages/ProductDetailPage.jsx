@@ -110,6 +110,7 @@ export default function ProductDetailPage() {
                     }
                     className="btn btn-outline-dark border-0 py-2"
                     type="button"
+                    disabled={qtySelect === 1}
                   >
                     <i className="fas fa-minus"></i>
                   </button>

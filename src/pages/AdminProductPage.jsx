@@ -1,10 +1,11 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Pagination from "../components/Pagination";
 import ProductModal from "../components/ProductModal";
 import DelProductModal from "../components/DelProductModal";
 import Toast from "../components/Toast";
+import AdminSidebar from "../components/AdminSidebar";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
@@ -39,6 +40,8 @@ export default function AdminProductPage() {
   }, [navigate]);
 
   const getProducts = async (page = 1) => {
+    if (!axios.defaults.headers.common["Authorization"]) return;
+
     try {
       const res = await axios.get(
         `${BASE_URL}/v2/api/${API_PATH}/admin/products?page=${page}`
@@ -65,46 +68,9 @@ export default function AdminProductPage() {
     setIsProductModalOpen(true);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("isAuth");
-    navigate("/admin/login");
-  };
-
   return (
     <div className="d-flex">
-      {/* 左側側邊選單 */}
-      <nav
-        className="bg-dark text-white p-4"
-        style={{ minWidth: "200px", minHeight: "100vh" }}
-      >
-        <h2 className="h5 mb-4">管理後台</h2>
-        <ul className="list-unstyled">
-          <li className="mb-3">
-            <Link
-              to="/admin/products"
-              className="text-white text-decoration-none"
-            >
-              產品管理
-            </Link>
-          </li>
-          <li className="mb-3">
-            <Link
-              to="/admin/orders"
-              className="text-white text-decoration-none"
-            >
-              訂單管理
-            </Link>
-          </li>
-          <li>
-            <button
-              onClick={handleLogout}
-              className="btn btn-outline-light w-100"
-            >
-              登出
-            </button>
-          </li>
-        </ul>
-      </nav>
+      <AdminSidebar />
 
       {/* 右側內容 */}
       <div className="container-fluid p-4">
