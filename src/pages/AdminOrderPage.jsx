@@ -27,7 +27,15 @@ export default function AdminOrderPage() {
 
   // 取得訂單資料（支援分頁）
   const getOrders = async (page = 1) => {
-    if (!axios.defaults.headers.common["Authorization"]) return;
+    if (!axios.defaults.headers.common["Authorization"]) {
+      const match = document.cookie.match(new RegExp("(^| )hexToken=([^;]+)"));
+      const token = match ? match[2] : null;
+      if (token) {
+        axios.defaults.headers.common["Authorization"] = token;
+      } else {
+        return;
+      }
+    }
 
     try {
       const res = await axios.get(

@@ -40,7 +40,15 @@ export default function AdminProductPage() {
   }, [navigate]);
 
   const getProducts = async (page = 1) => {
-    if (!axios.defaults.headers.common["Authorization"]) return;
+    if (!axios.defaults.headers.common["Authorization"]) {
+      const match = document.cookie.match(new RegExp("(^| )hexToken=([^;]+)"));
+      const token = match ? match[2] : null;
+      if (token) {
+        axios.defaults.headers.common["Authorization"] = token;
+      } else {
+        return;
+      }
+    }
 
     try {
       const res = await axios.get(
